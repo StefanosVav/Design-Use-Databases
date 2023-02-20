@@ -1,0 +1,50 @@
+//Ta erwtimata exoun dokimastei se MySQL Workbench panw sti database yelp.
+
+1) SELECT name, yelping_since, review_count
+FROM user 
+WHERE name = 'Lisa'
+AND review_count > 500
+ORDER BY yelping_since;
+
+2) SELECT r.review_id, r.text, r.date, b.name, u.name
+FROM reviews r, business b, user u 
+WHERE r.business_id = b.business_id
+AND r.user_id = u.user_id
+AND b.name = 'Gab & Eat'
+AND u.name - 'Lisa';
+
+3)SELECT 'Yes' as Answer
+FROM reviews r, reviews_pos_neg pn
+WHERE r.review_id = pn.review_id
+AND r.business_id = 'OmpbTu4deR3ByOo7btTTZw' 
+AND pn.positive = 1
+UNION
+SELECT 'No' as Answer
+FROM reviews r, reviews_pos_neg pn
+WHERE r.review_id = pn.review_id
+AND r.business_id = 'OmpbTu4deR3ByOo7btTTZw' 
+AND (pn.positive = 0 
+OR pn.positive = NULL);
+
+4) SELECT b.business_id, b.name, COUNT(pn.positive) as 'Number of Reviews'
+FROM business b, reviews r, reviews_pos_neg pn
+WHERE b.business_id = r.business_id
+AND r.review_id = pn.review_id
+AND CAST(r.date AS DATETIME) BETWEEN '2014/01/01' and '2014/12/30'
+GROUP BY b.business_id
+HAVING COUNT(r.review_id)>10
+ORDER BY b.business_id;
+
+5) SELECT r.user_id, COUNT(r.review_id) as 'Number of Mobile Phone reviews'
+FROM reviews r, business b, business_category bc, category c
+WHERE r.business_id = b.business_id
+AND bc.business_id = b.business_id
+AND bc.category_id = c.category_id
+AND c.category = 'Mobile Phones'
+GROUP BY r.user_id;
+
+6) SELECT r.votes_useful, b.name, r.user_id
+FROM reviews r, business b
+WHERE r.business_id = b.business_id
+AND b.name = 'Midas'
+ORDER BY votes_useful DESC;
